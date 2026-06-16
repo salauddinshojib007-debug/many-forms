@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--
+    Title is set dynamically by the script below (Method 2 / Method 3 test).
+    Fallback is "Submission Received" for direct visits.
+  -->
+  <title>Submission Received</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F6F3;
+      --surface: #FFFFFF;
+      --border: #D9D6CF;
+      --text-primary: #1A1A1A;
+      --text-muted: #6B6860;
+      --contact-color:    #2D5BE3;
+      --newsletter-color: #1A8A5A;
+      --font-display: 'Georgia', serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --radius: 8px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--text-primary);
+      color: #fff;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .logo { font-family: var(--font-display); font-size: 1.1rem; }
+    header a { color: #aaa; font-size: 0.82rem; margin-left: auto; text-decoration: none; }
+    header a:hover { color: #fff; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+
+    /* Colour strip at top, changes per form */
+    .card-stripe {
+      height: 4px;
+      background: var(--text-muted); /* overridden by JS */
+      transition: background 0.3s;
+    }
+
+    .card-body {
+      padding: 36px 36px 40px;
+      text-align: center;
+    }
+
+    .checkmark {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #f0f0ee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.5rem;
+      transition: background 0.3s;
+    }
+
+    .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: normal;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 10px 22px;
+      background: var(--text-primary);
+      color: #fff;
+      border-radius: 5px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .back-btn:hover { opacity: 0.8; }
+
+    /* ── Debug panel ── */
+    .debug-panel {
+      margin: 0 36px 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 0.78rem;
+    }
+    .debug-panel summary {
+      padding: 10px 14px;
+      background: #f5f4f0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      list-style: none;
+      color: var(--text-muted);
+    }
+    .debug-panel summary::before { content: '▸ '; }
+    .debug-panel[open] summary::before { content: '▾ '; }
+    .debug-panel-body { padding: 14px; background: #1A1A1A; color: #7effa0; }
+    .debug-panel-body pre {
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+      font-size: 0.76rem;
+    }
+    .debug-label {
+      color: #aaa;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .debug-sep { border: none; border-top: 1px solid #333; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="logo">GTM Test Site</span>
+    <a href="index.html">← Back to forms</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="card-stripe" id="stripe"></div>
+      <div class="card-body">
+        <div class="checkmark" id="checkmark">✓</div>
+        <p class="eyebrow" id="eyebrow">Form submitted</p>
+        <h1 id="heading">Thank you!</h1>
+        <p class="subtitle" id="subtitle">Your submission has been received.</p>
+        <a href="index.html" class="back-btn">Submit another form</a>
+      </div>
+
+      <!-- Debug panel: shows parsed params + dataLayer event -->
+      <details class="debug-panel" id="debug-panel">
+        <summary>GTM debug output</summary>
+        <div class="debug-panel-body">
+          <span class="debug-label">Method 2 — URL parameters</span>
+          <pre id="debug-params">Loading…</pre>
+          <hr class="debug-sep" />
+          <span class="debug-label">Method 3 — dataLayer push</span>
+          <pre id="debug-datalayer">Loading…</pre>
+        </div>
+      </details>
+    </div>
+  </main>
+
+
+  <!--
+    ══════════════════════════════════════════════
+    GTM dataLayer bootstrap (place before GTM snippet in production)
+    ══════════════════════════════════════════════
+  -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
+
+  <!--
+    ══════════════════════════════════════════════
+    METHOD 2 — Read URL parameters
+    Reads query string appended by the form's hidden inputs.
+    In GTM: use a URL variable or a Custom JS variable reading
+    new URLSearchParams(window.location.search).get('form_id')
+    ══════════════════════════════════════════════
+  -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+
+      // Collect all params into a plain object for logging
+      var paramMap = {};
+      params.forEach(function (val, key) { paramMap[key] = val; });
+
+      var formId   = params.get('form_id')   || 'unknown';
+      var formName = params.get('form_name') || 'Form';
+
+      // Expose on window so GTM Custom JS variables can read them
+      window.gtmFormId   = formId;
+      window.gtmFormName = formName;
+
+      // ── Update UI based on which form was submitted ──
+      var isContact    = formId === 'contact_us';
+      var isNewsletter = formId === 'newsletter_signup';
+
+      var accentColor = isContact    ? '#2D5BE3'
+                      : isNewsletter ? '#1A8A5A'
+                      : '#555';
+
+      var emoji = isContact ? '✉️' : isNewsletter ? '📬' : '✓';
+
+      // Dynamic page title (distinct per form — useful for GTM Page Title variable)
+      if (isContact) {
+        document.title = 'Message Received — Contact Us | GTM Test Site';
+      } else if (isNewsletter) {
+        document.title = 'You\'re subscribed! — Newsletter | GTM Test Site';
+      }
+
+      // Update card visuals
+      document.getElementById('stripe').style.background    = accentColor;
+      document.getElementById('checkmark').style.background = accentColor + '22';
+      document.getElementById('checkmark').style.color      = accentColor;
+      document.getElementById('checkmark').textContent      = emoji;
+
+      if (isContact) {
+        document.getElementById('eyebrow').textContent  = 'Contact Us — form received';
+        document.getElementById('heading').textContent  = 'We'll be in touch.';
+        document.getElementById('subtitle').textContent =
+          'Your message has been sent. Expect a reply within one business day.';
+      } else if (isNewsletter) {
+        document.getElementById('eyebrow').textContent  = 'Newsletter Signup — confirmed';
+        document.getElementById('heading').textContent  = 'You're on the list.';
+        document.getElementById('subtitle').textContent =
+          'Thanks for subscribing. Your first issue will arrive soon.';
+      }
+
+      // Show params in debug panel
+      document.getElementById('debug-params').textContent =
+        JSON.stringify(paramMap, null, 2);
+    })();
+  </script>
+
+
+  <!--
+    ══════════════════════════════════════════════
+    METHOD 3 — Push event to dataLayer
+    In GTM: create a Custom Event trigger matching event name 'form_submission'.
+    Use the 'form_id' and 'form_name' fields as GTM data layer variables.
+    ══════════════════════════════════════════════
+  -->
+  <script>
+    (function () {
+      var params   = new URLSearchParams(window.location.search);
+      var formId   = params.get('form_id')   || 'unknown';
+      var formName = params.get('form_name') || 'Unknown Form';
+
+      var dlEvent = {
+        event:          'form_submission',   // GTM Custom Event trigger name
+        form_id:        formId,              // GTM variable: {{DLV - form_id}}
+        form_name:      formName,            // GTM variable: {{DLV - form_name}}
+        page_title:     document.title,      // dynamic title set above
+        page_location:  window.location.href,
+        timestamp:      new Date().toISOString()
+      };
+
+      // Push to dataLayer
+      window.dataLayer.push(dlEvent);
+
+      // Show in debug panel
+      document.getElementById('debug-datalayer').textContent =
+        'window.dataLayer.push(\n' +
+        JSON.stringify(dlEvent, null, 2) +
+        '\n)';
+    })();
+  </script>
+
+</body>
+</html>

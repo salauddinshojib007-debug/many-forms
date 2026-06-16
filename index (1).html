@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTM Test Site — Forms</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F6F3;
+      --surface: #FFFFFF;
+      --border: #D9D6CF;
+      --text-primary: #1A1A1A;
+      --text-muted: #6B6860;
+      --accent-contact: #2D5BE3;
+      --accent-newsletter: #1A8A5A;
+      --accent-contact-light: #EEF2FD;
+      --accent-newsletter-light: #E8F7EF;
+      --font-display: 'Georgia', serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --radius: 8px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--text-primary);
+      color: #fff;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+    header .badge {
+      font-size: 0.68rem;
+      background: #fff2;
+      border: 1px solid #fff3;
+      color: #ccc;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 56px 40px 40px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.2;
+      font-weight: normal;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 520px;
+    }
+
+    /* ── Forms grid ── */
+    .forms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 0 40px 60px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      .forms-grid { grid-template-columns: 1fr; padding: 0 20px 40px; }
+      .hero { padding: 36px 20px 28px; }
+      header { padding: 16px 20px; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 20px 24px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-header .form-type {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .contact-card .form-type  { color: var(--accent-contact); }
+    .newsletter-card .form-type { color: var(--accent-newsletter); }
+
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: normal;
+    }
+    .card-header p {
+      margin-top: 6px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-body { padding: 22px 24px 24px; }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #999;
+      box-shadow: 0 0 0 3px #0001;
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 11px 20px;
+      border: none;
+      border-radius: 5px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn:active { transform: scale(0.99); }
+    .btn-contact    { background: var(--accent-contact);    color: #fff; }
+    .btn-newsletter { background: var(--accent-newsletter); color: #fff; }
+
+    /* ── GTM note ── */
+    .gtm-note {
+      max-width: 760px;
+      margin: 0 auto 0;
+      padding: 0 40px 40px;
+    }
+    @media (max-width: 600px) { .gtm-note { padding: 0 20px 32px; } }
+    .gtm-note details {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .gtm-note summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-primary);
+      list-style: none;
+    }
+    .gtm-note summary::before { content: '▸ '; }
+    .gtm-note details[open] summary::before { content: '▾ '; }
+    .gtm-note details p { margin-top: 10px; }
+    .gtm-note code {
+      background: #f0f0ee;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.78rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="logo">GTM Test Site</span>
+    <span class="badge">Dev / QA</span>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Google Tag Manager · Testing Environment</p>
+    <h1>Two forms.<br>One thank-you page.</h1>
+    <p>Submit either form below to test conversion tracking. The thank-you page reads URL parameters, fires a <code>dataLayer</code> event, and sets a distinct page title per form — so you can differentiate them in GTM.</p>
+  </div>
+
+  <div class="forms-grid">
+
+    <!-- ── Form 1: Contact Us ── -->
+    <div class="card contact-card">
+      <div class="card-header">
+        <p class="form-type">Form 1 of 2</p>
+        <h2>Contact Us</h2>
+        <p>Send us a message and we'll get back to you within one business day.</p>
+      </div>
+      <div class="card-body">
+        <form
+          id="contact-form"
+          action="thank-you.html"
+          method="GET"
+          data-form-name="contact_us"
+        >
+          <!-- Hidden fields for GTM / URL param tracking -->
+          <input type="hidden" name="form_id"   value="contact_us" />
+          <input type="hidden" name="form_name" value="Contact Us" />
+          <input type="hidden" name="event"     value="form_submission" />
+
+          <div class="field">
+            <label for="c-name">Full name</label>
+            <input type="text" id="c-name" name="name" placeholder="Jane Smith" required />
+          </div>
+          <div class="field">
+            <label for="c-email">Email address</label>
+            <input type="email" id="c-email" name="email" placeholder="jane@example.com" required />
+          </div>
+          <div class="field">
+            <label for="c-subject">Subject</label>
+            <input type="text" id="c-subject" name="subject" placeholder="What's this about?" />
+          </div>
+          <div class="field">
+            <label for="c-message">Message</label>
+            <textarea id="c-message" name="message" placeholder="How can we help?"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-contact">Send message →</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Form 2: Newsletter Signup ── -->
+    <div class="card newsletter-card">
+      <div class="card-header">
+        <p class="form-type">Form 2 of 2</p>
+        <h2>Newsletter Signup</h2>
+        <p>Get weekly updates on product news, tips, and early access to new features.</p>
+      </div>
+      <div class="card-body">
+        <form
+          id="newsletter-form"
+          action="thank-you.html"
+          method="GET"
+          data-form-name="newsletter_signup"
+        >
+          <!-- Hidden fields for GTM / URL param tracking -->
+          <input type="hidden" name="form_id"   value="newsletter_signup" />
+          <input type="hidden" name="form_name" value="Newsletter Signup" />
+          <input type="hidden" name="event"     value="form_submission" />
+
+          <div class="field">
+            <label for="n-email">Email address</label>
+            <input type="email" id="n-email" name="email" placeholder="jane@example.com" required />
+          </div>
+          <div class="field">
+            <label for="n-name">First name <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+            <input type="text" id="n-name" name="first_name" placeholder="Jane" />
+          </div>
+          <div class="field">
+            <label for="n-freq">Email frequency</label>
+            <select id="n-freq" name="frequency">
+              <option value="weekly">Weekly digest</option>
+              <option value="monthly">Monthly roundup</option>
+              <option value="instant">Instant (every post)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-newsletter">Subscribe →</button>
+        </form>
+      </div>
+    </div>
+
+  </div><!-- /.forms-grid -->
+
+  <div class="gtm-note">
+    <details>
+      <summary>GTM tracking reference</summary>
+      <p>
+        Both forms submit via <code>GET</code> to <code>thank-you.html</code>, appending hidden fields as URL parameters (<code>form_id</code>, <code>form_name</code>, <code>event</code>).
+        The thank-you page reads those params and pushes them to <code>window.dataLayer</code>, making them available to GTM triggers.
+        The page <code>&lt;title&gt;</code> is also set dynamically per form, so you can use GTM's <em>Page Title</em> variable as a secondary differentiator.
+      </p>
+    </details>
+  </div>
+
+</body>
+</html>
